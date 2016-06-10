@@ -8,7 +8,6 @@
 
 #import "MXWebviewContext.h"
 #import <objc/runtime.h>
-#import "MXURLProtocol.h"
 
 NSNumber * MXBridge_ReturnCode_OK;
 NSNumber * MXBridge_ReturnCode_FAILED;

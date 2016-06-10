@@ -4,8 +4,52 @@ A easy way for javaScript to call Objective-C in iOS
 
 ## English
 
+A esay bridge between the JavaScript and Objective-C in iOS ,using the `JavaScriptCore.framework`.
 
+There are four main classes :
 
+* MXWebviewContext : A grobal context where for some grobal share data.
+* MXWebviewBridge : The bridge connected Objective-C and JavaScript.UIWebview hold one MXWebviewBridge within it's lifecycle.
+* MXWebviewPlugin : Objective-C plugins provided for JavaScript. In `MXBridge`, JavaScript calls Objective-C function by calling this plugins.
+* MXMethodInvocation : Storing Information for one call from JavaScript to Objective-C.
+
+## Brief Example
+
+To setup `MXBridge` :
+
+	[[MXWebviewContext shareContext] setUp];
+	
+Create a plugin for JavaScript:
+
+	@interface TestPlugin : MXWebviewPlugin
+	
+	@end
+	@implementation TestPlugin
+	- (NSDictionary *)helloworld {
+	    return @{@"data":@"Hello world , hello MXBridge!"};
+	}
+	@end
+
+Create a `plugins.plist` file in your project. Then declare the plugins with the name of plugin and the class name :
+
+        <key>testplugin</key>
+        <string>TestPlugin</string>
+        
+Then,you can call the plugin in your JavaScript Code :
+
+	function clickSync() {
+		var retString = mxbridge.execSync("testplugin","helloworld");
+		if (retString.data) {
+            mxbridge.log(retString.data);
+			alert(retString.data);
+		}
+	}
+
+## Important
+
+The JSContext init every time after the finish of website loading in UIWebview.So MXBridge is unavailable  before the loading finished. MXBridge post a notification `bridgeReady` after the initializtion.You should call the Objective-C plugins after the `bridgeReady` notification recieved.
+
+More documents on the plan.
 
 ## 中文文档
 
