@@ -479,6 +479,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MXWebviewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lxm.coding.MXWebviewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -491,6 +492,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MXWebviewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lxm.coding.MXWebviewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -562,6 +564,7 @@
 				28BDD1571D083F4A002C32EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		28BDD1581D083F4A002C32EE /* Build configuration list for PBXNativeTarget "MXWebviewDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -570,6 +573,7 @@
 				28BDD15A1D083F4A002C32EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		28BDD15B1D083F4A002C32EE /* Build configuration list for PBXNativeTarget "MXWebviewDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -578,6 +582,7 @@
 				28BDD15D1D083F4A002C32EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

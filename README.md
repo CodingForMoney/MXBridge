@@ -15,6 +15,10 @@ There are four main classes :
 
 ## Brief Example
 
+Add `MXBridge` to your project by `Cocoapods`:
+
+	pod 'MXBridge'
+
 To setup `MXBridge` :
 
 	[[MXWebviewContext shareContext] setUp];
@@ -63,6 +67,10 @@ More documents in the plan.
 * MXMethodInvocation : JS对插件的一次调用信息。
 
 ## 使用说明
+
+导入MXBridge,使用Cocoapos：
+
+	pod "MXBridge"
 
 初始化 ：
 
