@@ -1,6 +1,6 @@
 # MXBridge
 
-A easy way for javaScript to call Objective-C in iOS
+A easy way for javaScript to call Objective-C in iOS.
 
 ## English
 
@@ -47,9 +47,9 @@ Then,you can call the plugin in your JavaScript Code :
 
 ## Important
 
-The JSContext init every time after the finish of website loading in UIWebview.So MXBridge is unavailable  before the loading finished. MXBridge post a notification `bridgeReady` after the initializtion.You should call the Objective-C plugins after the `bridgeReady` notification recieved.
+The JSContext inits every time after the finish of website loading in the UIWebview.So the MXBridge is unavailable  before the loading finished. MXBridge post a notification `bridgeReady` after the initializtion.You should call the Objective-C plugins after the `bridgeReady` notification recieved.
 
-More documents on the plan.
+More documents in the plan.
 
 ## 中文文档
 
