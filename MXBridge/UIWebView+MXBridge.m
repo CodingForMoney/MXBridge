@@ -69,10 +69,6 @@ static void *UIWebView_MXWebviewDelegateProxy_Key = &UIWebView_MXWebviewDelegate
     return self;
 }
 
-- (instancetype)init {
-    return nil;
-}
-
 - (nullable instancetype)mx_initWithCoder:(NSCoder *)aDecoder {
     [self mx_initWithCoder:aDecoder];
     if (self) {
