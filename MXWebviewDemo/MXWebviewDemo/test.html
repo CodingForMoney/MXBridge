@@ -4,7 +4,6 @@
 <meta http-equiv="Content-Language" content="zh-cn" />
 <title>test</title>
 <script type="text/javascript">
-    // 需要注意的是， bridgeReady 消息是极其重要的，在页面加载完成后，才会进行JS的注入，然后才发送消息bridgeReady，才能进行JS与OC的交互。
 	function clickSync() {
 		// 同步调用
 		var retString = mxbridge.execSync("testplugin","helloworld");

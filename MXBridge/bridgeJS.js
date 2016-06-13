@@ -5,7 +5,7 @@ if (!window.mxbridge) {
           return  'call' + (__UUID__++) + new Date().valueOf();
     }
     var mxbridge = {
-        version : "0.0.1",
+        version : "0.1.0",
         //提供一些应用信息.
         appName : undefined,
         appVersion : undefined,
@@ -31,10 +31,10 @@ if (!window.mxbridge) {
             if (typeof log == "object") {
                 log = JSON.stringify(log);
             };
-            mxbridge.OCBridgeForJS.loggerWithLevel(log,logLevel);
+            mxbridge.OCBridgeForJS.loggerWithLevel([log,logLevel]);
             console.log(log);
         },
-        // 异步调用，JS调用Native，一般建议使用异步回调，因为JS是单线程的。
+        // 异步调用，JS调用OC ， 参数是JSON对象，没有参数时，传null 或者 undefined .
         exec : function (pluginName, functionName, arguments,successCallback,failCallback) {
             if ( typeof pluginName != "string" || pluginName.length < 1) {
                 ret = {errorCode:mxbridge.ARGUMENTS_ERROR,errorMsg:"未输入正确插件名"} ;
@@ -62,7 +62,7 @@ if (!window.mxbridge) {
             mxbridge.JSbridgeForOC.callBackLists[jscall.callID] = list;
             mxbridge.OCBridgeForJS.callAsyn(jscall);
         },
-        // 同步调用函数
+        // 同步调用函数 . 参数是JSON对象，没有参数时，传null 或者 undefined .  返回值可以是一个string 也可以是一个object ，自行约束
         execSync : function (pluginName, functionName, arguments) {
             var ret;
             if ( typeof pluginName != "string" || pluginName.length < 1) {
@@ -87,27 +87,23 @@ if (!window.mxbridge) {
             ret = mxbridge.OCBridgeForJS.callSync(jscall);
             return ret;
         } ,
-        // JS调用OC , 通过这个桥,也就是这里是一个OC对象
+        // JS调用OC
         OCBridgeForJS : {
             //loggerWithLevel() 打日志
             //callSync() 同步调用。 
             //callAsyn() 异步调用
         },
 
-        // OC调用JS， 通过这个桥，所以这个桥是一个JS对象
+        // OC调用JS
         JSbridgeForOC : {
                     // callbacklist , 异步函数调用使用。
             callBackLists : {} ,
             // 供Native进行回调时，通过这里传回 数据
             callbackAsyn : function (callbackID,status,args) {
                 // 执行异步调用，然后OC对JS的调用立即返回。
-                window.setTimeout(mxbridge.JSbridgeForOC.callbackFunctionMaker(callbackID,status,args),0);
-            },
-            // 创建一个无参函数。
-            callbackFunctionMaker : function(callbackID , status, args) {
-                return function() {
-                    mxbridge.JSbridgeForOC._callbackAsyn(callbackID,status,args);
-                };
+                window.setTimeout(function() {
+                                    mxbridge.JSbridgeForOC._callbackAsyn(callbackID,status,args);
+                                  },0);
             },
             // 真正的回调函数.
             _callbackAsyn : function(callbackID , status ,args) {

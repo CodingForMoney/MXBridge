@@ -18,18 +18,18 @@
 /**
  *  打日志，带日志等级
  */
-- (void)loggerWithLevel;
+- (void)loggerWithLevel:(NSArray *)arguments;
 
 /**
  *  异步调用函数
  */
-- (void)callAsyn;
+- (void)callAsyn:(NSDictionary *)arguments;
 
 
 /**
  *  同步调用函数
  */
-- (JSValue *)callSync;
+- (JSValue *)callSync:(NSDictionary *)arguments;
 
 @end
 
@@ -86,9 +86,9 @@
     }
     // 加载完成，才发送消息bridgeready。
     if ([_context respondsToSelector:@selector(evaluateScript:withSourceURL:)]) {
-        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');window.mxbridge.isReady = true;readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}" withSourceURL:[MXWebviewContext shareContext].bridgeJSURL];
+        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}" withSourceURL:[MXWebviewContext shareContext].bridgeJSURL];
     } else {
-        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');window.mxbridge.isReady = true;readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}"];
+        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}"];
     }
 }
 
@@ -109,28 +109,27 @@
         if (nil != next && [next isKindOfClass: [UIViewController class]]) {
             _containerVC = (UIViewController *)next;
         }else {
-            NSLog(@"未设置containerVC，且未将webview放置在Controller中，而想要使用ContainerVC,失败。");
+            NSLog(@"未设置containerVC");
         }
     }
     return _containerVC;
 }
 
-#pragma mark - callforJS
+#pragma mark - call from JavaScript
 
-- (void)loggerWithLevel {
-    NSArray *args = [JSContext currentArguments];
-    id log = args[0];
-    NSInteger level = [args[1] toInt32];
-    [MXWebviewContext shareContext].loggerBlock(log,level);
+- (void)loggerWithLevel:(NSArray *)arguments {
+    if ([arguments isKindOfClass:[NSArray class]] && arguments.count == 2) {
+        id log = arguments[0];
+        NSInteger level = [arguments[1] integerValue];
+        [MXWebviewContext shareContext].loggerBlock(log,level);
+    }
 }
 
 
-- (void)callAsyn {
-    NSDictionary *jscall = [[JSContext currentArguments][0] toDictionary];
+- (void)callAsyn:(NSDictionary *)arguments {
     __weak MXWebviewBridge *wself = self;
-    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     dispatch_async(dispatch_get_main_queue(), ^{ // 在主线程中执行。
-        MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:jscall];
+        MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:arguments];
         if (invocation == nil) {
             NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_INIT_FAILED,@"errorMsg":@"传递参数错误，无法调用函数！"};
             NSLog(@"异步调用 ，失败 %@",error);
@@ -163,9 +162,8 @@
 }
 
 
-- (JSValue *)callSync {
-    NSDictionary *jscall = [[JSContext currentArguments][0] toDictionary];
-    MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:jscall];
+- (JSValue *)callSync:(NSDictionary *)arguments {
+    MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:arguments];
     if (invocation == nil) {
         NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_INIT_FAILED,@"errorMsg":@"传递参数错误，无法调用函数！"};
         return [JSValue valueWithObject:error inContext:_context];
@@ -202,7 +200,7 @@
 }
 
 
-#pragma mark - callForNative
+#pragma mark - callback from Objective-C
 
 
 

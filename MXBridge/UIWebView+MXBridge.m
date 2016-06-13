@@ -32,13 +32,14 @@
     }
     return YES;
 }
+
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     if ([self.realDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         return [self.realDelegate webViewDidStartLoad:webView];
     }
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    //  每次加载完成，需要更新一下JS环境.
+     //  每次加载完成，需要更新一下JS环境.
     [_bridge setupJSContext];
     if ([self.realDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         return [self.realDelegate webViewDidFinishLoad:webView];
@@ -61,6 +62,7 @@
 
 static void *UIWebView_MXWebviewDelegateProxy_Key = &UIWebView_MXWebviewDelegateProxy_Key;
 
+// UIView init 会调用 initWithFrame
 - (instancetype)mx_initWithFrame:(CGRect)frame {
     [self mx_initWithFrame:frame];
     if (self) {
