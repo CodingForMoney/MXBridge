@@ -88,13 +88,17 @@ static void *UIWebView_MXWebviewDelegateProxy_Key = &UIWebView_MXWebviewDelegate
     objc_setAssociatedObject(self, UIWebView_MXWebviewDelegateProxy_Key, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (MXWebviewBridge *)bridge {
+- (MXWebviewBridge *)mx_bridge {
     return ((MXWebviewDelegateProxy *)self.delegate).bridge;
 }
 
 - (void)mx_setDelegate:(id)delegate {
     //  设置上真正的代理。
-    ((MXWebviewDelegateProxy *)self.delegate).realDelegate = delegate;
+    if ([self.delegate isKindOfClass:[MXWebviewDelegateProxy class]]) {
+        ((MXWebviewDelegateProxy *)self.delegate).realDelegate = delegate;
+    }else {
+        [self mx_setDelegate:delegate];
+    }
 }
 
 @end

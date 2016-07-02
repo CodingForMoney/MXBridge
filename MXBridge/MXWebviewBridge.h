@@ -10,12 +10,12 @@
 #import <UIKit/UIKit.h>
 #import "MXMethodInvocation.h"
 /**
- *  与webview进行通讯的桥。
+ *  与webview进行通讯的桥梁,可以调用JS,也可以被JS调用.
  */
 @interface MXWebviewBridge : NSObject
 
 /**
- *  以webview初始化，两者互相持有。
+ *  以webview初始化.
  *
  *  @param webview <#webview description#>
  *
@@ -34,7 +34,7 @@
 - (void)cleanJSContext;
 
 /**
- *  context是从webview中获取的，由webview自己管理，我们只管 webview是否存在的检测。
+ *  context是从webview中获取的，由webview自己管理，我们只需 webview是否存在的检测。
  */
 @property (nonatomic,weak,readonly) JSContext *context;
 
@@ -50,20 +50,20 @@
 @property (nonatomic,weak,readonly) UIWebView *webview;
 
 /**
- *  容器viewcontroller。外部初始化时，一定要传递这个值。当然，如果自己不需要的话，可以不传，会通过某种方式获取。
+ *  容器viewcontroller。外部可以设置这个值,没有设置,会通过 view的层级找到持有webview的ViewController
  */
 @property (nonatomic,weak) UIViewController *containerVC;
 
 /**
- *  异步回调，传递数据给JS。
+ *  异步回调，异步回传数据 给JS端。
  *
- *  @param success    <#success description#>
- *  @param dict       <#dict description#>
- *  @param invocation <#invocation description#>
+ *  @param success    是否成功
+ *  @param dict       回传一个NSDictionary的对象,到JS端会是一个json对象
+ *  @param invocation 根据调用ID进行回调.
  */
 - (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation ;
 
-// 回调，传 String 给js。
+// 回调，传 String类型的数据 给js。
 - (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation ;
 
 @end

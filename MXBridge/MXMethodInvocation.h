@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  JS对OC的一次函数调用
+ *  JS对OC的一次函数调用信息
  */
 @interface MXMethodInvocation : NSObject
 
@@ -23,7 +23,8 @@
 - (instancetype)initWithJSCall:(NSDictionary *)jscall;
 
 /**
- *  函数参数,可能为空，
+ *  函数参数,可能为空. 参数是一个Dictionary对象的形式,也就是JS调用的参数应该是一个JS的对象,json
+ 对象的形式.
  */
 @property (nonatomic,strong) NSDictionary *arguments;
 
@@ -32,9 +33,14 @@
  */
 @property (nonatomic,strong) NSString *invocationID;
 
-
+/**
+ *  插件名
+ */
 @property (nonatomic,strong) NSString *pluginName;
 
+/**
+ *  函数名
+ */
 @property (nonatomic,strong) NSString *functionName;
 
 @end

@@ -15,7 +15,7 @@
         _functionName = jscall[@"functionName"] ;
         _pluginName = jscall[@"pluginName"];
         _arguments = jscall[@"arguments"];
-        _invocationID = jscall[@"callID"];
+        _invocationID = jscall[@"invocationID"];
         if (_functionName.length < 1 ) {
             NSLog(@"未传递调用函数functionName ，当前JSCall为 :%@",jscall);
             return nil;

@@ -15,9 +15,9 @@
 @interface UIWebView(MXBridge)
 
 /**
- *  关于暴露的内容，暴露多少才是合适？
+ *  桥接
  */
-@property (nonatomic,readonly) MXWebviewBridge *bridge;
+@property (nonatomic,readonly) MXWebviewBridge *mx_bridge;
 
 
 @end

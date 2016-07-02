@@ -117,7 +117,6 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
                 method_exchangeImplementations(originalMethod, swizzledMethod);
             }
         }
-//        [MXURLProtocol registerProtocol];
     });
 }
 

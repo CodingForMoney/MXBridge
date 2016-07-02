@@ -1,24 +1,26 @@
 
 if (!window.mxbridge) {
     var __UUID__ = 0;
+    // 创建一次调用的唯一调用ID
     function UUID() {
           return  'call' + (__UUID__++) + new Date().valueOf();
     }
     var mxbridge = {
-        version : "0.1.0",
-        //提供一些应用信息.
+        version : "0.1.0", // 版本号
+        isReady : false, // 是否初始化完成.
+        //提供一些应用信息. 可自行补充其他信息
         appName : undefined,
         appVersion : undefined,
         osType : undefined,
         osVersion : undefined,
         // 调用时，系统的错误码
-        OK:0,
-        FAILED:-1,
-        PLUGIN_NOT_FOUND:-2,
-        METHOD_NOT_FOUND_EXCEPTION:-3,
-        PLUGIN_INIT_FAILED:-4,
-        ARGUMENTS_ERROR:-5,
-        UNKNOWN_ERROR:-6,
+        OK:0, // 调用成功
+        FAILED:-1, // 调用失败
+        PLUGIN_NOT_FOUND:-2, // 找不到插件
+        METHOD_NOT_FOUND_EXCEPTION:-3, // 找不到对应的方法
+        PLUGIN_INIT_FAILED:-4, // 初始化创建失败
+        ARGUMENTS_ERROR:-5, // 传递参数不合法
+        UNKNOWN_ERROR:-6, // 位置错误
         // 在Native中打印日志，两个参数，第一个参数放字符串，第二个参数表示日志等级 @"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR" 。默认为Info
         log : function (log,logLevel) {
             if (typeof logLevel == "number") {
@@ -35,7 +37,7 @@ if (!window.mxbridge) {
             console.log(log);
         },
         // 异步调用，JS调用OC ， 参数是JSON对象，没有参数时，传null 或者 undefined .
-        exec : function (pluginName, functionName, arguments,successCallback,failCallback) {
+        exec : function (pluginName, functionName, args,successCallback,failCallback) {
             if ( typeof pluginName != "string" || pluginName.length < 1) {
                 ret = {errorCode:mxbridge.ARGUMENTS_ERROR,errorMsg:"未输入正确插件名"} ;
                 mxbridge.log(ret);
@@ -46,24 +48,24 @@ if (!window.mxbridge) {
                 mxbridge.log(ret);
                 return ret;
             };
-            if (arguments == null) {
-                arguments = undefined;// 不能传递 null到OC中，因为undeifned会被转换为 nil ，而null 会被转换为 NSNull.
+            if (args == null) {
+                args = undefined;// 不能传递 null到OC中，因为undeifned会被转换为 nil ，而null 会被转换为 NSNull.
             };
             var jscall = {
                 "pluginName" : pluginName,
                 "functionName" : functionName,
-                "arguments" : arguments,
-                "callID" : UUID()
+                "arguments" : args,
+                "invocationID" : UUID()
             };
             var list = {
                 "success":successCallback,
                 "fail":failCallback
             };
-            mxbridge.JSbridgeForOC.callBackLists[jscall.callID] = list;
+            mxbridge.JSbridgeForOC.callBackLists[jscall.invocationID] = list;
             mxbridge.OCBridgeForJS.callAsyn(jscall);
         },
-        // 同步调用函数 . 参数是JSON对象，没有参数时，传null 或者 undefined .  返回值可以是一个string 也可以是一个object ，自行约束
-        execSync : function (pluginName, functionName, arguments) {
+        // 同步调用函数 . 参数是JSON对象，没有参数时，传null 或者 undefined .  返回值可以是一个string 也可以是一个object ，针对实际需求自行约定
+        execSync : function (pluginName, functionName, args) {
             var ret;
             if ( typeof pluginName != "string" || pluginName.length < 1) {
                 ret = {errorCode:mxbridge.ARGUMENTS_ERROR,errorMsg:"未输入正确插件名"} ;
@@ -75,18 +77,28 @@ if (!window.mxbridge) {
                 mxbridge.log(ret);
                 return ret;
             };
-            if (arguments == null) {
-                arguments = undefined;// 不能传递 null到OC中，因为undeifned会被转换为 nil ，而null 会被转换为 NSNull.
+            if (args == null) {
+                args = undefined;// 不能传递 null到OC中，因为undeifned会被转换为 nil ，而null 会被转换为 NSNull.
             };
             var jscall = {
                 "pluginName" : pluginName,
                 "functionName" : functionName,
-                "arguments" : arguments,
-                "callID" : UUID()
+                "arguments" : args,
+                "invocationID" : UUID()
             };
             ret = mxbridge.OCBridgeForJS.callSync(jscall);
             return ret;
         } ,
+        // 安全模式 , 桥的调用不是同步的.
+        execSafely : function (pluginName, functionName, args,successCallback,failCallback) {
+            if (window.mxbridge && window.mxbridge.isReady) {
+                window.mxbridge.exec(pluginName, functionName, args,successCallback,failCallback);
+            } else {
+                document.addEventListener("bridgeReady",  function() {
+                                          window.mxbridge.exec(pluginName, functionName, args,successCallback,failCallback);
+                                          }, true);
+            }
+        },
         // JS调用OC
         OCBridgeForJS : {
             //loggerWithLevel() 打日志
@@ -120,6 +132,4 @@ if (!window.mxbridge) {
         }
     };
     window.mxbridge = mxbridge;
-}else {
-	window.mxbridge.log("不可能出现这个问题，每次切换页面会切换context.",4);
 }

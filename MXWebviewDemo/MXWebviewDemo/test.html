@@ -14,7 +14,7 @@
 	}
 	function clickAysn() {
 		// 异步调用
-        mxbridge.exec("testplugin","loadPicture",{"url":"http://resource.luoxianming.cn/steam.gif"},function successDownload(data){
+        mxbridge.execSafely("testplugin","loadPicture",{"url":"http://resource.luoxianming.cn/steam.gif"},function successDownload(data){
         	document.getElementById("showImg").src = "data:image/png;base64," + data ;
         });
 	}

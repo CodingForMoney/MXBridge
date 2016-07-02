@@ -16,18 +16,18 @@
 @protocol MXNativeBridgeExport <JSExport>
 
 /**
- *  打日志，带日志等级
+ *  打日志，带日志等级,第一个参数为日志内容,第二个参数为日志等级
  */
 - (void)loggerWithLevel:(NSArray *)arguments;
 
 /**
- *  异步调用函数
+ *  异步调用插件
  */
 - (void)callAsyn:(NSDictionary *)arguments;
 
 
 /**
- *  同步调用函数
+ *  同步调用插件
  */
 - (JSValue *)callSync:(NSDictionary *)arguments;
 
@@ -37,7 +37,7 @@
 @interface MXWebviewBridge ()<MXNativeBridgeExport>
 
 /**
- *  webview持有一个bridge， bridge持有插件。这里是持有插件队列的地方。每个插件在一个webview中只会存在一个。
+ *  webview持有一个bridge， bridge持有插件。这里是持有插件队列的地方。每个插件在一个webview中只会存在一个。当webview释放的时候,bridge和插件也会跟随一起释放.但由于使用关联对象,释放会有一段延迟.
  */
 @property (nonatomic,strong) NSMutableDictionary<NSString *,MXWebviewPlugin *> *pluginDictionarys;
 
@@ -56,11 +56,14 @@
 }
 
 /**
- *  初始化JS环境，注入js。
+ *  初始化JS环境， 注入JS,并获取JS中对象.
  */
 - (void)setupJSContext {
     JSContext *context = [_webview valueForKeyPath: @"documentView.webView.mainFrame.javaScriptContext"];
-    if (context == _context) {
+    if (_context[@"mxbridge"]) {
+        // 这种情况存在于设置Webview有缓冲,在goBack的时候,虽然context指针的值变了,但是window上真实地对象还存在,即JS已经初始化了
+        _jsBridge = [_context[@"mxbridge"] valueForProperty:@"JSbridgeForOC"];
+        [_context[@"mxbridge"] setValue:self forProperty:@"OCBridgeForJS"];
         return;
     }
     _context = context;
@@ -84,21 +87,23 @@
     if ([MXWebviewContext shareContext].osVersion) {
         [_context[@"mxbridge"] setValue:[MXWebviewContext shareContext].osVersion forProperty:@"osVersion"];
     }
-    // 加载完成，才发送消息bridgeready。
+    // 加载完成，发送消息bridgeready。
     if ([_context respondsToSelector:@selector(evaluateScript:withSourceURL:)]) {
-        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}" withSourceURL:[MXWebviewContext shareContext].bridgeJSURL];
+        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);window.mxbridge.isReady=true;}" withSourceURL:[MXWebviewContext shareContext].bridgeJSURL];
     } else {
-        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);}"];
+        [_context evaluateScript:@"if (document.addEventListener) {var readyEvent = document.createEvent('UIEvents');readyEvent.initEvent('bridgeReady', false, false);document.dispatchEvent(readyEvent);window.mxbridge.isReady=true;}"];
     }
 }
 
 - (void)cleanJSContext {
+    // 断开 JS 与 OC的联系,以使两者能正常释放.
     [_context[@"mxbridge"] setValue:nil forProperty:@"OCBridgeForJS"];
     _jsBridge = nil;
 }
 
 - (UIViewController *)containerVC {
     if (!_containerVC) {
+        // 如果没有设置 containerVC, 会根据nextResponder 找到持有webview的controlller
         UIResponder *next = _webview;
         while (next) {
             if([next isKindOfClass: [UIViewController class]] ){
@@ -127,8 +132,8 @@
 
 
 - (void)callAsyn:(NSDictionary *)arguments {
-    __weak MXWebviewBridge *wself = self;
-    dispatch_async(dispatch_get_main_queue(), ^{ // 在主线程中执行。
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 在主线程中执行。
         MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:arguments];
         if (invocation == nil) {
             NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_INIT_FAILED,@"errorMsg":@"传递参数错误，无法调用函数！"};
@@ -139,7 +144,7 @@
             Class cls = [MXWebviewContext shareContext].plugins[invocation.pluginName];
             if (cls == NULL) {
                 NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_NOT_FOUND,@"errorMsg":[NSString stringWithFormat:@"插件 %@ 并不存在 ",invocation.pluginName]};
-                [wself callBackSuccess:NO withDictionary:error toInvocation:invocation];
+                [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
             }
             plugin = [[cls alloc] initWithBridge:self];
             _pluginDictionarys[invocation.pluginName] = plugin;
@@ -150,7 +155,7 @@
             selector = NSSelectorFromString([invocation.functionName stringByAppendingString:@":"]);
             if (![plugin respondsToSelector:selector]) {
                 NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION,@"errorMsg":[NSString stringWithFormat:@"插件对应函数 %@ 并不存在 ",invocation.functionName]};
-                [wself callBackSuccess:NO withDictionary:error toInvocation:invocation];
+                [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
             }
         }
         // 调用插件

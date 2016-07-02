@@ -13,9 +13,7 @@
 /**
  *  插件基类。
  */
-@interface MXWebviewPlugin : NSObject {
-    __weak id _weakSelf;
-}
+@interface MXWebviewPlugin : NSObject
 
 @property (nonatomic,weak,readonly) MXWebviewBridge *bridge;
 
@@ -32,7 +30,7 @@
  */
 - (instancetype)initWithBridge:(MXWebviewBridge *)bridge;
 
-// 注意，同步调用的执行，不再 主线程中， 而 异步调用 的执行 在主线程中进行的。
+// 注意，同步调用的执行，不在 主线程中， 而 异步调用 的执行 在主线程中进行的。
 
 // 派生的插件中，同步调用的方法，返回值是一个Dictionary，可以返回空。 但是函数上的返回值，必须声明为NSDictionary * ， 否则会崩溃。
 //- (NSDictionary *)syncFunction（:(MXMethodInvocation *)invocation）;，

@@ -21,7 +21,6 @@
 - (instancetype)initWithBridge:(MXWebviewBridge *)bridge {
     if (self = [super init]) {
         _bridge = bridge;
-        _weakSelf = self;
     }
     return self;
 }
