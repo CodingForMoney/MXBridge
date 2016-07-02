@@ -57,6 +57,8 @@ More documents in the plan.
 
 ## 中文文档
 
+[详细介绍文档](MXBridge.md)
+
 一个简单的JS与OC的桥，通过`JavaScriptCore`来实现.
 
 先介绍一下几个类：
