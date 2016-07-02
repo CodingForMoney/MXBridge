@@ -7,7 +7,7 @@
 
 大致画了一下类图:
 
-![](http://resource.luoxianming.cn/MXBRIDGE.png)
+![](MXBRIDGE.png)
 
 结合上图,先介绍一下这里几个类的方法:
 
