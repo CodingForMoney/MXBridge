@@ -45,7 +45,7 @@
         return [self.realDelegate webViewDidFinishLoad:webView];
     }
 }
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error {
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     if ([self.realDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         return [self.realDelegate webView:webView didFailLoadWithError:error];
     }
