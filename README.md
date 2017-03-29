@@ -1,24 +1,26 @@
-# MXBridge
+## MXBridge
 
-A easy way for javaScript to call Objective-C in iOS.
+Bridge betweeen iOS and JavaScript.
 
 ## English
 
-A esay bridge between the JavaScript and Objective-C in iOS ,using the `JavaScriptCore.framework`.
+Bridge JavaScript and Objective-C using the `JavaScriptCore`.
 
-There are four main classes :
+Classes description:
 
-* MXWebviewContext : A grobal context where for some grobal share data.
-* MXWebviewBridge : The bridge connected Objective-C and JavaScript.UIWebview hold one MXWebviewBridge within it's lifecycle.
-* MXWebviewPlugin : Objective-C plugins provided for JavaScript. In `MXBridge`, JavaScript calls Objective-C function by calling this plugins.
-* MXMethodInvocation : Storing Information for one call from JavaScript to Objective-C.
+* `MXWebviewContext` : A context for global setting.
+* `MXWebviewBridge` : The bridge connected Objective-C and JavaScript. UIWebview will hold a `MXWebviewBridge` instance within the lifecycle.
+* `MXWebviewPlugin` : Objective-C plugin which provide functions for JavaScript. A plugin has some functions. `js` will specify the plugin and function to call Native.
+* `MXCallNativeInvocation` : Storing Information for one call from JavaScript to Objective-C.
+* `MXNativeMethod` : Storing Native method info.
+* `MXWebviewPluginConfig` : Store Native plugin info.
 
-## Brief Example
+## Usage
 
 Add `MXBridge` to your project by `Cocoapods`:
 
 	pod 'MXBridge'
-
+	
 To setup `MXBridge` :
 
 	[[MXWebviewContext shareContext] setUp];
@@ -29,80 +31,54 @@ Create a plugin for JavaScript:
 	
 	@end
 	@implementation TestPlugin
+	MX_EXTERN_METHOD(hello, helloworld)
 	- (NSDictionary *)helloworld {
 	    return @{@"data":@"Hello world , hello MXBridge!"};
 	}
+	
+	MX_EXTERN_METHOD(loadPicture, loadPicture:)
+	- (void)loadPicture:(MXCallNativeInvocation *)invocation {
+	    NSString *url = invocation.arguments[@"url"];
+	    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+	    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+	        if (error) {
+	            [self callBackSuccess:NO withString:nil toInvocation:invocation];
+	        }else {
+	            NSString *str = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+	            [self callBackSuccess:YES withString:str toInvocation:invocation];
+	        }
+	    }] resume];
+	}
+
 	@end
+	
+Use `MX_EXTERN_METHOD` to export functions of plugins. First argument is the function name in `js` . The second argument is the selector of the exported function.
 
-Create a `plugins.plist` file in your project. Then declare the plugins with the name of plugin and the class name :
+Register plugin before using :
 
-        <key>testplugin</key>
-        <string>TestPlugin</string>
-        
+	[[MXWebviewContext shareContext] registerPlugin:[TestPlugin class] name:@"test"];
+
+
 Then,you can call the plugin in your JavaScript Code :
 
 	function clickSync() {
-		var retString = mxbridge.execSync("testplugin","helloworld");
+		var retString = mxbridge.execSync("test","hello");
 		if (retString.data) {
             mxbridge.log(retString.data);
 			alert(retString.data);
 		}
 	}
+	function clickAysn() {
+        mxbridge.execSafely("test","loadPicture",{"url":"http://resource.luoxianming.cn/steam.gif"},function successDownload(data){
+        	document.getElementById("showImg").src = "data:image/png;base64," + data ;
+        });
+	}
+	
+## Notice
 
-## Important
-
-The JSContext inits every time after the finish of website loading in the UIWebview.So the MXBridge is unavailable  before the loading finished. MXBridge post a notification `bridgeReady` after the initializtion.You should call the Objective-C plugins after the `bridgeReady` notification recieved.
+The JSContext inits every time after the finish of website loading in the UIWebview.So the `MXBridge` is unavailable  before the loading finished. MXBridge post a notification `bridgeReady` after the initializtion.You should call the Objective-C plugins after the `bridgeReady` notification recieved.
 
 More documents in the plan.
-
-## 中文文档
-
-[详细介绍文档](MXBridge.md)
-
-一个简单的JS与OC的桥，通过`JavaScriptCore`来实现.
-
-先介绍一下几个类：
-
-* MXWebviewContext : 全局上下文，单例，负责储存一些全局共享的内容。
-* MXWebviewBridge ： 与JavaScript进行通信的桥，一个webview持有一个这样的桥，跟随webview的生命周期。
-* MXWebviewPlugin : 插件。MXBridge通过插件的方式与JS进行交互，JS能调用的方法都是插件的形式创建的。
-* MXMethodInvocation : JS对插件的一次调用信息。
-
-## 使用说明
-
-导入MXBridge,使用Cocoapos：
-
-	pod "MXBridge"
-
-初始化 ：
-
-	[[MXWebviewContext shareContext] setUp];
-
-创建一个插件 ：
-
-	@interface TestPlugin : MXWebviewPlugin
-	
-	@end
-	@implementation TestPlugin
-	- (NSDictionary *)helloworld {
-	    return @{@"data":@"Hello world , hello MXBridge!"};
-	}
-	@end
-
-在项目中新建一个`plugins.plist`文件，以插件名为key，插件类名为值，声明项目中提供给`javascript`调用的插件 ：
-
-        <key>testplugin</key>
-        <string>TestPlugin</string>
-       
-然后，在html页面中，在收到`bridgeReady`后，就可以调用相关的插件了，如Demo中的：
-
-	function clickSync() {
-		var retString = mxbridge.execSync("testplugin","helloworld");
-		if (retString.data) {
-            mxbridge.log(retString.data);
-			alert(retString.data);
-		}
-	}
 
 ## License
 
