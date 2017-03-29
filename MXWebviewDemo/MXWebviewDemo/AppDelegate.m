@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MXWebviewContext.h"
+#import "TestPlugin.h"
 
 @interface AppDelegate ()
 
@@ -20,6 +21,7 @@
     // Override point for customization after application launch.
     
     [[MXWebviewContext shareContext] setUp];
+    [[MXWebviewContext shareContext] registerPlugin:[TestPlugin class] name:@"test"];
     return YES;
 }
 

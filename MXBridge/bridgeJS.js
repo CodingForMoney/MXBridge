@@ -37,7 +37,7 @@ if (!window.mxbridge) {
             console.log(log);
         },
         // 异步调用，JS调用OC ， 参数是JSON对象，没有参数时，传null 或者 undefined .
-        exec : function (pluginName, functionName, args,successCallback,failCallback) {
+        exec : function (pluginName, functionName, args , successCallback , failCallback) {
             if ( typeof pluginName != "string" || pluginName.length < 1) {
                 ret = {errorCode:mxbridge.ARGUMENTS_ERROR,errorMsg:"未输入正确插件名"} ;
                 mxbridge.log(ret);
@@ -126,6 +126,7 @@ if (!window.mxbridge) {
                     } else {
                         callbackfuns.fail && callbackfuns.fail(args);
                     }
+                    // 暂不提供 keepAlive的接口。
                     delete mxbridge.JSbridgeForOC.callBackLists[callbackID];
                 };
             }

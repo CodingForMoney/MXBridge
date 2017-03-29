@@ -1,5 +1,5 @@
 //
-//  MXMethodInvocation.h
+//  MXCallNativeInvocation.h
 //  MXWebviewDemo
 //
 //  Created by 罗贤明 on 16/6/8.
@@ -11,7 +11,7 @@
 /**
  *  JS对OC的一次函数调用信息
  */
-@interface MXMethodInvocation : NSObject
+@interface MXCallNativeInvocation : NSObject
 
 /**
  *  以一次JScall的调用进行初始化

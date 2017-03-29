@@ -15,16 +15,17 @@
 		28BDD13B1D083F4A002C32EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28BDD1391D083F4A002C32EE /* LaunchScreen.storyboard */; };
 		28BDD1461D083F4A002C32EE /* MXWebviewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1451D083F4A002C32EE /* MXWebviewDemoTests.m */; };
 		28BDD1511D083F4A002C32EE /* MXWebviewDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1501D083F4A002C32EE /* MXWebviewDemoUITests.m */; };
-		28BDD1611D08403C002C32EE /* MXMethodInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1601D08403C002C32EE /* MXMethodInvocation.m */; };
+		28BDD1611D08403C002C32EE /* MXCallNativeInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1601D08403C002C32EE /* MXCallNativeInvocation.m */; };
 		28BDD16A1D095305002C32EE /* MXWebviewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1691D095305002C32EE /* MXWebviewBridge.m */; };
 		28BDD16D1D095B0F002C32EE /* MXWebviewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD16C1D095B0F002C32EE /* MXWebviewContext.m */; };
 		28BDD1701D095C1B002C32EE /* MXWebviewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD16F1D095C1B002C32EE /* MXWebviewPlugin.m */; };
 		28BDD1731D0961EE002C32EE /* UIWebView+MXBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1721D0961EE002C32EE /* UIWebView+MXBridge.m */; };
 		28BDD1751D0962B3002C32EE /* bridgeJS.js in Resources */ = {isa = PBXBuildFile; fileRef = 28BDD1741D0962B3002C32EE /* bridgeJS.js */; };
-		28BDD1771D0A85F0002C32EE /* plugins.plist in Resources */ = {isa = PBXBuildFile; fileRef = 28BDD1761D0A85F0002C32EE /* plugins.plist */; };
 		28BDD17A1D0A905D002C32EE /* MXURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD1791D0A905D002C32EE /* MXURLProtocol.m */; };
 		28BDD17C1D0AA178002C32EE /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 28BDD17B1D0AA178002C32EE /* test.html */; };
 		28BDD17F1D0AA18D002C32EE /* TestPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BDD17E1D0AA18D002C32EE /* TestPlugin.m */; };
+		D9299F471E8B50C000A3D0F8 /* MXNativeMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = D9299F461E8B50C000A3D0F8 /* MXNativeMethod.m */; };
+		D9299F4A1E8B536B00A3D0F8 /* MXWebviewPluginConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = D9299F491E8B536B00A3D0F8 /* MXWebviewPluginConfig.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,8 +62,8 @@
 		28BDD14C1D083F4A002C32EE /* MXWebviewDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MXWebviewDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		28BDD1501D083F4A002C32EE /* MXWebviewDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXWebviewDemoUITests.m; sourceTree = "<group>"; };
 		28BDD1521D083F4A002C32EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		28BDD15F1D08403C002C32EE /* MXMethodInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMethodInvocation.h; sourceTree = "<group>"; };
-		28BDD1601D08403C002C32EE /* MXMethodInvocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMethodInvocation.m; sourceTree = "<group>"; };
+		28BDD15F1D08403C002C32EE /* MXCallNativeInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXCallNativeInvocation.h; sourceTree = "<group>"; };
+		28BDD1601D08403C002C32EE /* MXCallNativeInvocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXCallNativeInvocation.m; sourceTree = "<group>"; };
 		28BDD1681D095305002C32EE /* MXWebviewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXWebviewBridge.h; sourceTree = "<group>"; };
 		28BDD1691D095305002C32EE /* MXWebviewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXWebviewBridge.m; sourceTree = "<group>"; };
 		28BDD16B1D095B0F002C32EE /* MXWebviewContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXWebviewContext.h; sourceTree = "<group>"; };
@@ -72,12 +73,15 @@
 		28BDD1711D0961EE002C32EE /* UIWebView+MXBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+MXBridge.h"; sourceTree = "<group>"; };
 		28BDD1721D0961EE002C32EE /* UIWebView+MXBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+MXBridge.m"; sourceTree = "<group>"; };
 		28BDD1741D0962B3002C32EE /* bridgeJS.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bridgeJS.js; sourceTree = "<group>"; };
-		28BDD1761D0A85F0002C32EE /* plugins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = plugins.plist; sourceTree = "<group>"; };
 		28BDD1781D0A905D002C32EE /* MXURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXURLProtocol.h; sourceTree = "<group>"; };
 		28BDD1791D0A905D002C32EE /* MXURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXURLProtocol.m; sourceTree = "<group>"; };
 		28BDD17B1D0AA178002C32EE /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		28BDD17D1D0AA18D002C32EE /* TestPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPlugin.h; sourceTree = "<group>"; };
 		28BDD17E1D0AA18D002C32EE /* TestPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPlugin.m; sourceTree = "<group>"; };
+		D9299F451E8B50C000A3D0F8 /* MXNativeMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNativeMethod.h; sourceTree = "<group>"; };
+		D9299F461E8B50C000A3D0F8 /* MXNativeMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNativeMethod.m; sourceTree = "<group>"; };
+		D9299F481E8B536B00A3D0F8 /* MXWebviewPluginConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXWebviewPluginConfig.h; sourceTree = "<group>"; };
+		D9299F491E8B536B00A3D0F8 /* MXWebviewPluginConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXWebviewPluginConfig.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +145,6 @@
 				28BDD1391D083F4A002C32EE /* LaunchScreen.storyboard */,
 				28BDD13C1D083F4A002C32EE /* Info.plist */,
 				28BDD12B1D083F49002C32EE /* Supporting Files */,
-				28BDD1761D0A85F0002C32EE /* plugins.plist */,
 				28BDD17D1D0AA18D002C32EE /* TestPlugin.h */,
 				28BDD17E1D0AA18D002C32EE /* TestPlugin.m */,
 			);
@@ -178,8 +181,8 @@
 			isa = PBXGroup;
 			children = (
 				28BDD1741D0962B3002C32EE /* bridgeJS.js */,
-				28BDD15F1D08403C002C32EE /* MXMethodInvocation.h */,
-				28BDD1601D08403C002C32EE /* MXMethodInvocation.m */,
+				28BDD15F1D08403C002C32EE /* MXCallNativeInvocation.h */,
+				28BDD1601D08403C002C32EE /* MXCallNativeInvocation.m */,
 				28BDD1681D095305002C32EE /* MXWebviewBridge.h */,
 				28BDD1691D095305002C32EE /* MXWebviewBridge.m */,
 				28BDD16B1D095B0F002C32EE /* MXWebviewContext.h */,
@@ -188,6 +191,10 @@
 				28BDD16F1D095C1B002C32EE /* MXWebviewPlugin.m */,
 				28BDD1711D0961EE002C32EE /* UIWebView+MXBridge.h */,
 				28BDD1721D0961EE002C32EE /* UIWebView+MXBridge.m */,
+				D9299F451E8B50C000A3D0F8 /* MXNativeMethod.h */,
+				D9299F461E8B50C000A3D0F8 /* MXNativeMethod.m */,
+				D9299F481E8B536B00A3D0F8 /* MXWebviewPluginConfig.h */,
+				D9299F491E8B536B00A3D0F8 /* MXWebviewPluginConfig.m */,
 			);
 			name = MXBridge;
 			path = ../../MXBridge;
@@ -260,7 +267,7 @@
 				TargetAttributes = {
 					28BDD1271D083F49002C32EE = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = UFCHE8E9A8;
+						DevelopmentTeam = 5VNDL2GBJ9;
 					};
 					28BDD1401D083F4A002C32EE = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -302,7 +309,6 @@
 				28BDD17C1D0AA178002C32EE /* test.html in Resources */,
 				28BDD1381D083F4A002C32EE /* Assets.xcassets in Resources */,
 				28BDD1361D083F49002C32EE /* Main.storyboard in Resources */,
-				28BDD1771D0A85F0002C32EE /* plugins.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,14 +334,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				28BDD1331D083F49002C32EE /* ViewController.m in Sources */,
+				D9299F4A1E8B536B00A3D0F8 /* MXWebviewPluginConfig.m in Sources */,
 				28BDD1701D095C1B002C32EE /* MXWebviewPlugin.m in Sources */,
 				28BDD16D1D095B0F002C32EE /* MXWebviewContext.m in Sources */,
 				28BDD16A1D095305002C32EE /* MXWebviewBridge.m in Sources */,
+				D9299F471E8B50C000A3D0F8 /* MXNativeMethod.m in Sources */,
 				28BDD17F1D0AA18D002C32EE /* TestPlugin.m in Sources */,
 				28BDD1301D083F49002C32EE /* AppDelegate.m in Sources */,
 				28BDD17A1D0A905D002C32EE /* MXURLProtocol.m in Sources */,
 				28BDD12D1D083F49002C32EE /* main.m in Sources */,
-				28BDD1611D08403C002C32EE /* MXMethodInvocation.m in Sources */,
+				28BDD1611D08403C002C32EE /* MXCallNativeInvocation.m in Sources */,
 				28BDD1731D0961EE002C32EE /* UIWebView+MXBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -478,6 +486,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5VNDL2GBJ9;
 				INFOPLIST_FILE = MXWebviewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -491,6 +500,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5VNDL2GBJ9;
 				INFOPLIST_FILE = MXWebviewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

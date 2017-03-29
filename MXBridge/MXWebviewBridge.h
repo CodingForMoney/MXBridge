@@ -8,7 +8,7 @@
 
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <UIKit/UIKit.h>
-#import "MXMethodInvocation.h"
+#import "MXCallNativeInvocation.h"
 /**
  *  与webview进行通讯的桥梁,可以调用JS,也可以被JS调用.
  */
@@ -61,9 +61,12 @@
  *  @param dict       回传一个NSDictionary的对象,到JS端会是一个json对象
  *  @param invocation 根据调用ID进行回调.
  */
-- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation ;
+- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation ;
 
 // 回调，传 String类型的数据 给js。
-- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation ;
+- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation ;
+
+// 回调，传递 array 类型数据
+- (void)callBackSuccess:(BOOL)success withArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
 
 @end

@@ -7,15 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MXWebviewPlugin.h"
 
 // 返回给js的返回码
-extern NSNumber * MXBridge_ReturnCode_OK;
-extern NSNumber * MXBridge_ReturnCode_FAILED;
-extern NSNumber * MXBridge_ReturnCode_PLUGIN_NOT_FOUND;
-extern NSNumber * MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION;
-extern NSNumber * MXBridge_ReturnCode_PLUGIN_INIT_FAILED;
-extern NSNumber * MXBridge_ReturnCode_ARGUMENTS_ERROR;
-extern NSNumber * MXBridge_ReturnCode_UNKNOWN_ERROR;
+extern NSInteger const MXBridge_ReturnCode_OK;
+extern NSInteger const MXBridge_ReturnCode_FAILED;
+extern NSInteger const MXBridge_ReturnCode_PLUGIN_NOT_FOUND;
+extern NSInteger const MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION;
+extern NSInteger const MXBridge_ReturnCode_PLUGIN_INIT_FAILED;
+extern NSInteger const MXBridge_ReturnCode_ARGUMENTS_ERROR;
+extern NSInteger const MXBridge_ReturnCode_UNKNOWN_ERROR;
 
 /**
  *  打印日志block，可以自己定义，也可以使用默认的，默认的格式为 :     MUBridgeLog : level : xxxx....
@@ -30,26 +31,15 @@ typedef void (^MXLoggerWithLevelBlock)(NSString *log , NSInteger level);
  */
 @interface MXWebviewContext : NSObject
 
-/**
- *  bridge的js代码
- */
-@property (nonatomic,strong,readonly) NSString *bridgeJS;
 
-/**
- *  js的URL
- */
-@property (nonatomic,strong) NSURL *bridgeJSURL;
 
-/**
- *  全部的plugin列表, 列表中为从文件plugins.plist中加载，key为插件名，value为插件的类
- */
-@property (nonatomic,strong,readonly) NSDictionary *plugins;
 /**
  *  全局共享
  *
  *  @return <#return value description#>
  */
 + (instancetype)shareContext;
+
 
 /**
  *  appName , 可以向mxbridge上添加一些基础的应用信息。默认为空，设置后，js中才能获取。
@@ -72,5 +62,32 @@ typedef void (^MXLoggerWithLevelBlock)(NSString *log , NSInteger level);
  *  初始化， 注册webview监控。
  */
 - (void)setUp;
+
+/**
+ 全局注册插件
+ 
+ @param plugin <#plugin description#>
+ */
+- (void)registerPlugin:(Class)plugin name:(NSString *)name;
+
+
+
+#pragma mark - private
+
+/**
+ *  bridge的js代码
+ */
+@property (nonatomic,strong,readonly) NSString *bridgeJS;
+
+/**
+ *  js的URL
+ */
+@property (nonatomic,strong) NSURL *bridgeJSURL;
+
+/**
+ *  全部的plugin列表, 列表中为从文件plugins.plist中加载，key为插件名，value为插件的类
+ */
+@property (nonatomic,strong,readonly) NSMutableDictionary *plugins;
+
 
 @end

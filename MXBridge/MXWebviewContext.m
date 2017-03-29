@@ -8,14 +8,15 @@
 
 #import "MXWebviewContext.h"
 #import <objc/runtime.h>
+#import "MXWebviewPluginConfig.h"
 
-NSNumber * MXBridge_ReturnCode_OK;
-NSNumber * MXBridge_ReturnCode_FAILED;
-NSNumber * MXBridge_ReturnCode_PLUGIN_NOT_FOUND;
-NSNumber * MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION;
-NSNumber * MXBridge_ReturnCode_PLUGIN_INIT_FAILED;
-NSNumber * MXBridge_ReturnCode_ARGUMENTS_ERROR;
-NSNumber * MXBridge_ReturnCode_UNKNOWN_ERROR;
+NSInteger const MXBridge_ReturnCode_OK = 0;
+NSInteger const MXBridge_ReturnCode_FAILED = -1;
+NSInteger const MXBridge_ReturnCode_PLUGIN_NOT_FOUND = -2;
+NSInteger const MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION = -3;
+NSInteger const MXBridge_ReturnCode_PLUGIN_INIT_FAILED = -4;
+NSInteger const MXBridge_ReturnCode_ARGUMENTS_ERROR = -5;
+NSInteger const MXBridge_ReturnCode_UNKNOWN_ERROR = -6;
 
 
 NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
@@ -28,13 +29,6 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         context = [[MXWebviewContext alloc] init];
-        MXBridge_ReturnCode_OK = @(0);
-        MXBridge_ReturnCode_FAILED = @(-1);
-        MXBridge_ReturnCode_PLUGIN_NOT_FOUND = @(-2);
-        MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION = @(-3);
-        MXBridge_ReturnCode_PLUGIN_INIT_FAILED = @(-4);
-        MXBridge_ReturnCode_ARGUMENTS_ERROR = @(-5);
-        MXBridge_ReturnCode_UNKNOWN_ERROR = @(-6);
     });
     return context;
 }
@@ -48,32 +42,15 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
             NSLog(@"加载本地 bridgeJS.js文件失败， 发生错误 : %@",error);
             _bridgeJS = @"";// 放一个空值，防止崩溃。
         }
+        // 默认的日志输出
         _loggerBlock = ^(NSString *log,NSInteger loggerLevel) {
             NSLog(@"MXBridgeLog : %@ : %@",MXLoggerLevel[loggerLevel],log);
         };
-        [self initPlugins];
+        _plugins = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-/**
- *  初始化plugins Map。
- */
-- (void)initPlugins {
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"plugins" ofType:@"plist"];
-    NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-    NSMutableDictionary *plugins = [[NSMutableDictionary alloc] initWithCapacity:data.count];
-    for (NSString *key in data.allKeys) {
-        NSString *className = data[key];
-        Class cls = NSClassFromString(className);
-        if (cls != nil) {
-            plugins[key] = cls;
-        }else{
-            NSLog(@"在plugins.plist中声明的插件 %@ : %@ , 类%@ 并不存在 ！！！",key,className,className);
-        }
-    }
-    _plugins = plugins;
-}
 
 - (NSURL *)bridgeJSURL {
     if (!_bridgeJSURL) {
@@ -83,6 +60,7 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
 }
 
 - (void)setUp {
+    // 通过方法替换来实现注入，也可以通过其他方式来实现
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Class class = [UIWebView class];
@@ -120,4 +98,34 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
     });
 }
 
+
+- (void)registerPlugin:(Class)plugin name:(NSString *)name {
+    if (![plugin isSubclassOfClass:[MXWebviewPlugin class]]) {
+        return;
+    }
+    MXWebviewPluginConfig *config = [[MXWebviewPluginConfig alloc] init];
+    config.pluginClass = plugin;
+    config.pluginName = name;
+    NSMutableDictionary *methods = [[NSMutableDictionary alloc] init];
+    unsigned int methodCount;
+    Method *list = class_copyMethodList(object_getClass(plugin), &methodCount);
+    for (unsigned int i = 0; i < methodCount; i++) {
+        Method method = list[i];
+        SEL selector = method_getName(method);
+        NSString *selectorName = NSStringFromSelector(selector);
+        if ([selectorName hasPrefix:@"__mx_export__"]) {
+            IMP imp = method_getImplementation(method);
+            NSArray<NSString *> *entries = ((NSArray<NSString *> *(*)(id, SEL))imp)(plugin, selector);
+            NSString *exportedMethodName = entries[0];
+            NSString *exportedSelectorName = entries[1];
+            SEL exportedSelector = NSSelectorFromString(exportedSelectorName);
+            NSMethodSignature *signature = [plugin instanceMethodSignatureForSelector:exportedSelector];
+            MXNativeMethod *nativeMethod = [[MXNativeMethod alloc] initWithName:exportedMethodName selector:exportedSelector signature:signature];
+            methods[exportedMethodName] = nativeMethod;
+        }
+    }
+    free(list);
+    config.exportedMethods = methods;
+    _plugins[name] = config;
+}
 @end

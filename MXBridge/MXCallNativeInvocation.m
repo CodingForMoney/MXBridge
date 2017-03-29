@@ -1,14 +1,14 @@
 //
-//  MXMethodInvocation.m
+//  MXCallNativeInvocation.m
 //  MXWebviewDemo
 //
 //  Created by 罗贤明 on 16/6/8.
 //  Copyright © 2016年 罗贤明. All rights reserved.
 //
 
-#import "MXMethodInvocation.h"
+#import "MXCallNativeInvocation.h"
 
-@implementation MXMethodInvocation
+@implementation MXCallNativeInvocation
 
 - (instancetype)initWithJSCall:(NSDictionary *)jscall {
     if (self = [super init]) {
@@ -26,6 +26,10 @@
         }
     }
     return self;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"PluginName : %@ \n FunctionName : %@ \n callID : %@ \n Arguments : %@ ",_pluginName,_functionName,_invocationID,_arguments];
 }
 
 

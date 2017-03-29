@@ -40,6 +40,7 @@
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
      //  每次加载完成，需要更新一下JS环境.
+    [_bridge cleanJSContext];
     [_bridge setupJSContext];
     if ([self.realDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         return [self.realDelegate webViewDidFinishLoad:webView];
@@ -80,7 +81,7 @@ static void *UIWebView_MXWebviewDelegateProxy_Key = &UIWebView_MXWebviewDelegate
 }
 
 - (void)mx_setup {
-    // 在初始化完成后，进行一些操作。
+    // 在初始化完成后，附加上 delegate
     MXWebviewDelegateProxy *proxy =[[MXWebviewDelegateProxy alloc] init];
     MXWebviewBridge *bridge = [[MXWebviewBridge alloc] initWithWebview:self];
     proxy.bridge = bridge;
@@ -88,17 +89,17 @@ static void *UIWebView_MXWebviewDelegateProxy_Key = &UIWebView_MXWebviewDelegate
     objc_setAssociatedObject(self, UIWebView_MXWebviewDelegateProxy_Key, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (MXWebviewDelegateProxy *)mx_proxyDelegate {
+    return objc_getAssociatedObject(self, UIWebView_MXWebviewDelegateProxy_Key);
+}
+
 - (MXWebviewBridge *)mx_bridge {
-    return ((MXWebviewDelegateProxy *)self.delegate).bridge;
+    return [self mx_proxyDelegate].bridge;
 }
 
 - (void)mx_setDelegate:(id)delegate {
     //  设置上真正的代理。
-    if ([self.delegate isKindOfClass:[MXWebviewDelegateProxy class]]) {
-        ((MXWebviewDelegateProxy *)self.delegate).realDelegate = delegate;
-    }else {
-        [self mx_setDelegate:delegate];
-    }
+    [self mx_proxyDelegate].realDelegate = delegate;
 }
 
 @end

@@ -9,14 +9,34 @@
 
 #import <Foundation/Foundation.h>
 #import "MXWebviewBridge.h"
-#import "MXMethodInvocation.h"
+#import "MXCallNativeInvocation.h"
+
+
+/**
+ 定义输出函数的宏
+ 
+ @param js_name js中使用的函数名
+ @param method native 的 selector
+ 
+ */
+#define MX_EXTERN_METHOD(js_name, method) \
++ (NSArray<NSString *> *)__mx_export__##js_name { \
+return @[@#js_name , NSStringFromSelector(@selector( method ))] ; \
+}
+
+
 /**
  *  插件基类。
  */
-@interface MXWebviewPlugin : NSObject
+@interface MXWebviewPlugin : NSObject {
+    __weak MXWebviewPlugin *_weakSelf;
+}
 
 @property (nonatomic,weak,readonly) MXWebviewBridge *bridge;
 
+/**
+    VC可能不存在。 
+ */
 @property (nonatomic,weak,readonly) UIViewController *containerVC;
 
 @property (nonatomic,weak,readonly) UIWebView *webview;
@@ -32,7 +52,7 @@
 
 // 注意，同步调用的执行，不在 主线程中， 而 异步调用 的执行 在主线程中进行的。
 
-// 派生的插件中，同步调用的方法，返回值是一个Dictionary，可以返回空。 但是函数上的返回值，必须声明为NSDictionary * ， 否则会崩溃。
+// 派生的插件中，同步调用的方法，返回值是一个Dictionary，可以返回空。
 //- (NSDictionary *)syncFunction（:(MXMethodInvocation *)invocation）;，
 // 异步调用。 可以带有后面的 invocation 参数，也可以不带。
 //- (void)asynFunction（:(MXMethodInvocation *)invocation）;
@@ -46,19 +66,28 @@
  *  @param dict       一个dictionary，会被转换为json传给JS，响应的调用。
  *  @param invocation <#invocation description#>
  */
-- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation;
+- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
 
 
-- (void)successCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation;
+- (void)successCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
 
-- (void)failCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation;
+- (void)failCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
 
 // callback 返回一个字符串。
-- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation;
+- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
 
-- (void)successCallBackWithString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation;
+- (void)successCallBackWithString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
 
-- (void)failCallBackWithString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation;
+- (void)failCallBackWithString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
+
+// callback 返回一个数组
+
+- (void)callBackSuccess:(BOOL)success withArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+
+- (void)successCallBackWithArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+
+- (void)failCallBackWithArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+
 
 
 @end

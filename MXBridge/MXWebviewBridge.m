@@ -10,6 +10,7 @@
 #import "MXWebviewContext.h"
 #import "MXWebviewPlugin.h"
 #import "UIWebView+MXBridge.h"
+#import "MXWebviewPluginConfig.h"
 /**
  * JS可以直接调用的 Native的方法。
  */
@@ -60,13 +61,13 @@
  */
 - (void)setupJSContext {
     JSContext *context = [_webview valueForKeyPath: @"documentView.webView.mainFrame.javaScriptContext"];
-    if (_context[@"mxbridge"]) {
+    _context = context;
+    if (![_context[@"mxbridge"] isUndefined]) {
         // 这种情况存在于设置Webview有缓冲,在goBack的时候,虽然context指针的值变了,但是window上真实地对象还存在,即JS已经初始化了
         _jsBridge = [_context[@"mxbridge"] valueForProperty:@"JSbridgeForOC"];
         [_context[@"mxbridge"] setValue:self forProperty:@"OCBridgeForJS"];
         return;
     }
-    _context = context;
     if ([_context respondsToSelector:@selector(evaluateScript:withSourceURL:)]) {
         [_context evaluateScript:[MXWebviewContext shareContext].bridgeJS withSourceURL:[MXWebviewContext shareContext].bridgeJSURL];
     } else {
@@ -97,13 +98,17 @@
 
 - (void)cleanJSContext {
     // 断开 JS 与 OC的联系,以使两者能正常释放.
-    [_context[@"mxbridge"] setValue:nil forProperty:@"OCBridgeForJS"];
+    _pluginDictionarys = [[NSMutableDictionary alloc] init];
+    if (_context) {
+        [_context[@"mxbridge"] setValue:nil forProperty:@"OCBridgeForJS"];
+    }
     _jsBridge = nil;
 }
 
 - (UIViewController *)containerVC {
     if (!_containerVC) {
         // 如果没有设置 containerVC, 会根据nextResponder 找到持有webview的controlller
+        // 如果这个 webview是添加到 window上而导致找不到VC，自行处理。
         UIResponder *next = _webview;
         while (next) {
             if([next isKindOfClass: [UIViewController class]] ){
@@ -134,71 +139,70 @@
 - (void)callAsyn:(NSDictionary *)arguments {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 在主线程中执行。
-        MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:arguments];
+        // 校验输入
+        MXCallNativeInvocation *invocation = [[MXCallNativeInvocation alloc] initWithJSCall:arguments];
         if (invocation == nil) {
-            NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_INIT_FAILED,@"errorMsg":@"传递参数错误，无法调用函数！"};
+            NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_PLUGIN_INIT_FAILED),@"errorMsg":@"传递参数错误，无法调用函数！"};
             NSLog(@"异步调用 ，失败 %@",error);
         }
+        // 找到配置
+        MXWebviewPluginConfig *config = [MXWebviewContext shareContext].plugins[invocation.pluginName];
+        if (!config) {
+            NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_PLUGIN_NOT_FOUND),@"errorMsg":[NSString stringWithFormat:@"插件 %@ 并不存在 ",invocation.pluginName]};
+            [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
+            return ;
+        }
+        // 创建插件实例
         MXWebviewPlugin *plugin = _pluginDictionarys[invocation.pluginName];
         if (!plugin) {
-            Class cls = [MXWebviewContext shareContext].plugins[invocation.pluginName];
-            if (cls == NULL) {
-                NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_NOT_FOUND,@"errorMsg":[NSString stringWithFormat:@"插件 %@ 并不存在 ",invocation.pluginName]};
-                [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
-            }
-            plugin = [[cls alloc] initWithBridge:self];
-            _pluginDictionarys[invocation.pluginName] = plugin;
+            Class pluginClass = config.pluginClass;
+            plugin = [[pluginClass alloc] initWithBridge:self];
+            _pluginDictionarys[config.pluginName] = plugin;
         }
-        // 调用 插件中相应方法
-        SEL selector = NSSelectorFromString(invocation.functionName);
-        if (![plugin respondsToSelector:selector]) {
-            selector = NSSelectorFromString([invocation.functionName stringByAppendingString:@":"]);
-            if (![plugin respondsToSelector:selector]) {
-                NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION,@"errorMsg":[NSString stringWithFormat:@"插件对应函数 %@ 并不存在 ",invocation.functionName]};
-                [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
-            }
+        // 找到方法
+        MXNativeMethod *method = config.exportedMethods[invocation.functionName];
+        if (!method) {
+            NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION),@"errorMsg":[NSString stringWithFormat:@"插件对应函数 %@ 并不存在 ",invocation.functionName]};
+            [self callBackSuccess:NO withDictionary:error toInvocation:invocation];
+            return;
         }
-        // 调用插件
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [plugin performSelector:selector withObject:invocation];
-#pragma clang diagnostic pop
+        // 调用方法
+        [method invokeWithObject:invocation onTarget:plugin];
     });
 }
 
 
 - (JSValue *)callSync:(NSDictionary *)arguments {
-    MXMethodInvocation *invocation = [[MXMethodInvocation alloc] initWithJSCall:arguments];
+    // 校验输入
+    MXCallNativeInvocation *invocation = [[MXCallNativeInvocation alloc] initWithJSCall:arguments];
     if (invocation == nil) {
-        NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_INIT_FAILED,@"errorMsg":@"传递参数错误，无法调用函数！"};
+        NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_PLUGIN_INIT_FAILED),@"errorMsg":@"传递参数错误，无法调用函数！"};
         return [JSValue valueWithObject:error inContext:_context];
     }
+    // 找到插件
+    MXWebviewPluginConfig *config = [MXWebviewContext shareContext].plugins[invocation.pluginName];
+    if (!config) {
+        NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_PLUGIN_NOT_FOUND),@"errorMsg":[NSString stringWithFormat:@"插件 %@ 并不存在 ",invocation.pluginName]};
+        return [JSValue valueWithObject:error inContext:_context];
+    }
+    // 创建实例
     MXWebviewPlugin *plugin = _pluginDictionarys[invocation.pluginName];
     if (!plugin) {
-        Class cls = [MXWebviewContext shareContext].plugins[invocation.pluginName];
-        if (cls == NULL) {
-            NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_PLUGIN_NOT_FOUND,@"errorMsg":[NSString stringWithFormat:@"插件 %@ 并不存在 ",invocation.pluginName]};
-            return [JSValue valueWithObject:error inContext:_context];
-        }
-        plugin = [[cls alloc] initWithBridge:self];
-        _pluginDictionarys[invocation.pluginName] = plugin;
+        Class pluginClass = config.pluginClass;
+        plugin = [[pluginClass alloc] initWithBridge:self];
+        _pluginDictionarys[config.pluginName] = plugin;
     }
-    // 调用 插件中相应方法
-    SEL selector = NSSelectorFromString(invocation.functionName);
-    if (![plugin respondsToSelector:selector]) {
-        selector = NSSelectorFromString([invocation.functionName stringByAppendingString:@":"]);
-        if (![plugin respondsToSelector:selector]) {
-            NSDictionary *error = @{@"errorCode":MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION,@"errorMsg":[NSString stringWithFormat:@"插件对应函数 %@ 并不存在 ",invocation.functionName]};
-            return [JSValue valueWithObject:error inContext:_context];
-        }
+    // 找到方法
+    MXNativeMethod *method = config.exportedMethods[invocation.functionName];
+    if (!method) {
+        NSDictionary *error = @{@"errorCode":@(MXBridge_ReturnCode_METHOD_NOT_FOUND_EXCEPTION),@"errorMsg":[NSString stringWithFormat:@"插件对应函数 %@ 并不存在 ",invocation.functionName]};
+        return [JSValue valueWithObject:error inContext:_context];
     }
-    // 调用插件
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    NSDictionary *retJson = [plugin performSelector:selector withObject:invocation];
-#pragma clang diagnostic pop
-    if ([retJson isKindOfClass:[NSDictionary class]]) {
-        JSValue *retJSValue = [JSValue valueWithObject:retJson inContext:_context];
+    // 调用方法
+    NSDictionary *returnValue = [method invokeWithObject:invocation onTarget:plugin];
+    // 处理同步返回值
+    if ([returnValue isKindOfClass:[NSDictionary class]]) {
+        JSValue *retJSValue = [JSValue valueWithObject:returnValue inContext:_context];
         return retJSValue;
     }
     return [JSValue valueWithNullInContext:_context];
@@ -208,33 +212,54 @@
 #pragma mark - callback from Objective-C
 
 
-
-- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXMethodInvocation *)invocation {
+// 回调，传递 map
+- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation {
     UIWebView *webview = _webview;
     if (webview && invocation.invocationID) {
         // 只要检测webview是否还在，就可以了
         // 回调JS。
-        NSNumber *status = success ? MXBridge_ReturnCode_OK : MXBridge_ReturnCode_FAILED;
-        NSArray *callBackParams = dict ? @[invocation.invocationID,status,dict] : @[invocation.invocationID,status];
+        NSNumber *status = success ? @(MXBridge_ReturnCode_OK) : @(MXBridge_ReturnCode_FAILED);
+        NSArray *callBacks = [dict isKindOfClass:[NSDictionary class]] ? @[invocation.invocationID,status,dict] : @[invocation.invocationID,status];
         dispatch_async(dispatch_get_main_queue(), ^{ // 要在主线程中执行
-            [_jsBridge[@"callbackAsyn"] callWithArguments:callBackParams];
+            if (_jsBridge && [callBacks isKindOfClass:[NSArray class]]) {
+                [_jsBridge[@"callbackAsyn"] callWithArguments:callBacks];
+            }
         });
     }
 }
 
 // 回调，传 String 给js。
-- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXMethodInvocation *)invocation {
+- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation {
     UIWebView *webview = _webview;
     if (webview && invocation.invocationID) {
         // 只要检测webview是否还在，就可以了
         // 回调JS。
-        NSNumber *status = success ? MXBridge_ReturnCode_OK : MXBridge_ReturnCode_FAILED;
-        NSArray *callBackParams = string ? @[invocation.invocationID,status,string] : @[invocation.invocationID,status];
+        NSNumber *status = success ? @(MXBridge_ReturnCode_OK) : @(MXBridge_ReturnCode_FAILED);
+        NSArray *callBacks = [string isKindOfClass:[NSString class]]? @[invocation.invocationID,status,string] : @[invocation.invocationID,status];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_jsBridge[@"callbackAsyn"] callWithArguments:callBackParams];
+            if (_jsBridge && [callBacks isKindOfClass:[NSArray class]]) {
+                [_jsBridge[@"callbackAsyn"] callWithArguments:callBacks];
+            }
         });
     }
 }
+
+// 回调，传递 Array
+- (void)callBackSuccess:(BOOL)success withArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation {
+    UIWebView *webview = _webview;
+    if (webview && invocation.invocationID) {
+        // 只要检测webview是否还在，就可以了
+        // 回调JS。
+        NSNumber *status = success ? @(MXBridge_ReturnCode_OK) : @(MXBridge_ReturnCode_FAILED);
+        NSArray *callBacks = [array isKindOfClass:[NSArray class]] ? @[invocation.invocationID,status,array] : @[invocation.invocationID,status];
+        dispatch_async(dispatch_get_main_queue(), ^{ // 要在主线程中执行
+            if (_jsBridge && [callBacks isKindOfClass:[NSArray class]]) {
+                [_jsBridge[@"callbackAsyn"] callWithArguments:callBacks];
+            }
+        });
+    }
+}
+
 
 
 @end

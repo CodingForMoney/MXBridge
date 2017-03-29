@@ -16,12 +16,13 @@
 
 @implementation TestPlugin
 
-
+MX_EXTERN_METHOD(hello, helloworld)
 - (NSDictionary *)helloworld {
     return @{@"data":@"Hello world , hello MXBridge!"};
 }
 
-- (void)loadPicture:(MXMethodInvocation *)invocation {
+MX_EXTERN_METHOD(loadPicture, loadPicture:)
+- (void)loadPicture:(MXCallNativeInvocation *)invocation {
     NSString *url = invocation.arguments[@"url"];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

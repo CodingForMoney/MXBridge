@@ -10,7 +10,7 @@
 #import "MXWebviewBridge.h"
 
 /**
- *  非注入式，赋予普通webview强大的js交互能力，以及调用插件的能力。
+ *  非侵入式式，赋予普通webview强大的js交互能力，以及调用插件的能力。
  */
 @interface UIWebView(MXBridge)
 
