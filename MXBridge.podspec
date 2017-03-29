@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "MXBridge"
-  s.version      = "0.1"
-  s.summary      = "a easy way for javaScript to call Objective-C in iOS"
+  s.version      = "0.2"
+  s.summary      = "Bridge betweeen iOS and JavaScript"
   s.homepage     = "https://github.com/CodingForMoney/MXBridge"
   s.license      = { :type => "MIT"}
   s.author       = { "luoxianming" => "luoxianmingg@gmail.com" }
