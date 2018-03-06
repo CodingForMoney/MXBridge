@@ -31,7 +31,7 @@
     return  self;
 }
 
-- (id)invokeWithObject:(MXCallNativeInvocation *)invocation onTarget:(id)target {
+- (id)invokeWithObject:(MXNativeInvocation *)invocation onTarget:(id)target {
     NSInvocation *invoc = [NSInvocation invocationWithMethodSignature:_signature];
     __autoreleasing id returnValue;
     invoc.selector = _selector;

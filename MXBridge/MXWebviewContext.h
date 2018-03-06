@@ -18,13 +18,21 @@ extern NSInteger const MXBridge_ReturnCode_PLUGIN_INIT_FAILED;
 extern NSInteger const MXBridge_ReturnCode_ARGUMENTS_ERROR;
 extern NSInteger const MXBridge_ReturnCode_UNKNOWN_ERROR;
 
+typedef NS_ENUM(NSUInteger, MXLoggerLevel) {
+    MXLoggerLevelDebug = 0,
+    MXLoggerLevelInfo,
+    MXLoggerLevelWarn,
+    MXLoggerLevelError
+};
+
+
 /**
  *  打印日志block，可以自己定义，也可以使用默认的，默认的格式为 :     MUBridgeLog : level : xxxx....
  *
  *  @param log   <#log description#>
- *  @param level 等级分为 verbose, debug, info ,warn,error.,从0 开始.默认是info.
+ *  @param level 等级
  */
-typedef void (^MXLoggerWithLevelBlock)(NSString *log , NSInteger level);
+typedef void (^MXLoggerWithLevelBlock)(NSString *log , MXLoggerLevel level);
 
 /**
  *  一个是全局的上下文，纪录一些全局数据信息
@@ -57,12 +65,6 @@ typedef void (^MXLoggerWithLevelBlock)(NSString *log , NSInteger level);
  */
 @property (nonatomic,copy) MXLoggerWithLevelBlock loggerBlock;
 
-
-/**
- *  初始化， 注册webview监控。
- */
-- (void)setUp;
-
 /**
  全局注册插件
  
@@ -91,3 +93,12 @@ typedef void (^MXLoggerWithLevelBlock)(NSString *log , NSInteger level);
 
 
 @end
+
+
+
+#define MXDebug(...)      [MXWebviewContext shareContext].loggerBlock( [NSString stringWithFormat: __VA_ARGS__ ] ,MXLoggerLevelDebug)
+#define MXInfo(...)       [MXWebviewContext shareContext].loggerBlock( [NSString stringWithFormat: __VA_ARGS__ ] ,MXLoggerLevelInfo)
+#define MXWarn(...)       [MXWebviewContext shareContext].loggerBlock( [NSString stringWithFormat: __VA_ARGS__ ] ,MXLoggerLevelWarn)
+#define MXError(...)      [MXWebviewContext shareContext].loggerBlock( [NSString stringWithFormat: __VA_ARGS__ ] ,MXLoggerLevelError)
+
+

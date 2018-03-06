@@ -1,3 +1,7 @@
+## 废弃 DEPRECATED
+
+通过`JavaScriptCore`搞的js桥接，但是`WKWebView`中拿不到`JSC`， 只能废弃了。
+
 ## MXBridge
 
 Bridge betweeen iOS and JavaScript.

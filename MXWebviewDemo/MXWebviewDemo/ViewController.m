@@ -7,11 +7,13 @@
 //
 
 #import "ViewController.h"
+#import "MXWebView.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UIWebView *webview;
 
+@property (nonatomic,strong) MXWebViewBridgeWrapper *bridge;
 
 @end
 
@@ -24,7 +26,9 @@
     NSString *localfilePath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"html"];
     NSString *urlPath = [@"file://" stringByAppendingPathComponent:localfilePath];
     
+    _bridge = [MXWebViewBridgeWrapper wrapperWithWebView:_webview];
     [_webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlPath]]];
+    
 }
 
 - (void)didReceiveMemoryWarning {

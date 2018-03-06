@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="O2J-pq-U56">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="9Jo-5p-Ihj">
+            <objects>
+                <navigationController id="O2J-pq-U56" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xFC-3W-2jL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Cg2-eK-qzY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i43-ol-EOB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1575" y="127"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r72-Ig-plR">
+                                <rect key="frame" x="37" y="74" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.10163249314981937" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="XNT-jb-7Zw"/>
+                                    <constraint firstAttribute="height" constant="30" id="khd-9Q-qab" userLabel="height = 44"/>
+                                </constraints>
+                                <state key="normal" title="load normal page">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadNormalPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eLi-GN-RHs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gLo-Ye-7aY">
+                                <rect key="frame" x="37" y="119" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="uZi-Lu-mKN"/>
+                                </constraints>
+                                <state key="normal" title="load page redirect">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadRedirect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LZY-cP-Fzr"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RV6-uf-fj3">
+                                <rect key="frame" x="37" y="164" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="UkS-wa-VqD"/>
+                                </constraints>
+                                <state key="normal" title="load a iframe after page loaded">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadIFrame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="d4c-85-bZL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rKn-8F-TcZ">
+                                <rect key="frame" x="37" y="209" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="IHE-Eg-mMT"/>
+                                </constraints>
+                                <state key="normal" title="load page with IFrame">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadWithIFrame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="T5B-n5-2Z7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZX-1I-P2s">
+                                <rect key="frame" x="37" y="254" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="4vf-sg-qQO"/>
+                                </constraints>
+                                <state key="normal" title="navigation load in page">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="navigatonLoad:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7us-qA-bDR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="toO-Mt-Y3Y">
+                                <rect key="frame" x="37" y="299" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="4f8-uy-76f"/>
+                                </constraints>
+                                <state key="normal" title="load page with IFrame Failed">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadWithIFrameFailed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="I4Y-L2-toM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h8M-NP-T5L">
+                                <rect key="frame" x="37" y="344" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="mLa-Ws-B67"/>
+                                </constraints>
+                                <state key="normal" title="load page with IFrame Invalid URL">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadFrameWithInvalidURL:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9FL-5o-997"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3h7-uu-M5F">
+                                <rect key="frame" x="37" y="389" width="300" height="30"/>
+                                <color key="backgroundColor" red="0.1016324931" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Uw2-Gn-AZK"/>
+                                </constraints>
+                                <state key="normal" title="load page with Invalid URL">
+                                    <color key="titleColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadPageWithInvalidURL:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5ei-zg-ch9"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="rKn-8F-TcZ" firstAttribute="height" secondItem="RV6-uf-fj3" secondAttribute="height" id="0we-yu-fsl"/>
+                            <constraint firstItem="3h7-uu-M5F" firstAttribute="centerX" secondItem="h8M-NP-T5L" secondAttribute="centerX" id="3gn-cJ-xp5"/>
+                            <constraint firstItem="r72-Ig-plR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7go-yB-shq"/>
+                            <constraint firstItem="rKn-8F-TcZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BHX-gp-Xt5"/>
+                            <constraint firstItem="QZX-1I-P2s" firstAttribute="width" secondItem="rKn-8F-TcZ" secondAttribute="width" id="CqC-BC-RFf"/>
+                            <constraint firstItem="toO-Mt-Y3Y" firstAttribute="width" secondItem="QZX-1I-P2s" secondAttribute="width" id="DXz-q0-cfa"/>
+                            <constraint firstItem="h8M-NP-T5L" firstAttribute="centerX" secondItem="toO-Mt-Y3Y" secondAttribute="centerX" id="Dws-Ep-Wjh"/>
+                            <constraint firstItem="toO-Mt-Y3Y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Fbx-gA-Xbn"/>
+                            <constraint firstItem="RV6-uf-fj3" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Gpq-2O-O3v"/>
+                            <constraint firstItem="RV6-uf-fj3" firstAttribute="top" secondItem="gLo-Ye-7aY" secondAttribute="bottom" constant="15" id="HjA-7Z-cT7"/>
+                            <constraint firstItem="gLo-Ye-7aY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ihf-Qk-gBW"/>
+                            <constraint firstItem="3h7-uu-M5F" firstAttribute="top" secondItem="h8M-NP-T5L" secondAttribute="bottom" constant="15" id="QOd-cf-aCH"/>
+                            <constraint firstItem="rKn-8F-TcZ" firstAttribute="width" secondItem="RV6-uf-fj3" secondAttribute="width" id="QXM-LH-RiJ"/>
+                            <constraint firstItem="QZX-1I-P2s" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SK5-Yn-v52"/>
+                            <constraint firstItem="rKn-8F-TcZ" firstAttribute="top" secondItem="RV6-uf-fj3" secondAttribute="bottom" constant="15" id="WYA-l5-96n"/>
+                            <constraint firstItem="gLo-Ye-7aY" firstAttribute="width" secondItem="r72-Ig-plR" secondAttribute="width" id="Yuq-Fb-yJb"/>
+                            <constraint firstItem="r72-Ig-plR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="Zst-tJ-F6p"/>
+                            <constraint firstItem="3h7-uu-M5F" firstAttribute="height" secondItem="h8M-NP-T5L" secondAttribute="height" id="aI5-71-nTX"/>
+                            <constraint firstItem="RV6-uf-fj3" firstAttribute="width" secondItem="r72-Ig-plR" secondAttribute="width" id="bIH-9m-Ihc"/>
+                            <constraint firstItem="RV6-uf-fj3" firstAttribute="width" secondItem="gLo-Ye-7aY" secondAttribute="width" id="cl7-vC-JYx"/>
+                            <constraint firstItem="QZX-1I-P2s" firstAttribute="top" secondItem="rKn-8F-TcZ" secondAttribute="bottom" constant="15" id="dB9-tE-Omv"/>
+                            <constraint firstItem="gLo-Ye-7aY" firstAttribute="top" secondItem="r72-Ig-plR" secondAttribute="bottom" constant="15" id="dmz-8B-d0q"/>
+                            <constraint firstItem="toO-Mt-Y3Y" firstAttribute="top" secondItem="QZX-1I-P2s" secondAttribute="bottom" constant="15" id="eUO-75-1KV"/>
+                            <constraint firstItem="h8M-NP-T5L" firstAttribute="top" secondItem="toO-Mt-Y3Y" secondAttribute="bottom" constant="15" id="fl0-Wl-vBW"/>
+                            <constraint firstItem="QZX-1I-P2s" firstAttribute="height" secondItem="rKn-8F-TcZ" secondAttribute="height" id="ift-94-mqc"/>
+                            <constraint firstItem="toO-Mt-Y3Y" firstAttribute="height" secondItem="QZX-1I-P2s" secondAttribute="height" id="j4R-FM-Mda"/>
+                            <constraint firstItem="3h7-uu-M5F" firstAttribute="width" secondItem="h8M-NP-T5L" secondAttribute="width" id="kC7-kw-62K"/>
+                            <constraint firstItem="h8M-NP-T5L" firstAttribute="width" secondItem="toO-Mt-Y3Y" secondAttribute="width" id="lkn-fv-JVC"/>
+                            <constraint firstItem="gLo-Ye-7aY" firstAttribute="height" secondItem="r72-Ig-plR" secondAttribute="height" id="rQa-sa-ioK"/>
+                            <constraint firstItem="h8M-NP-T5L" firstAttribute="height" secondItem="toO-Mt-Y3Y" secondAttribute="height" id="x8J-j9-DNI"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="fwj-c5-9FY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

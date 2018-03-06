@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "0830"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28BDD1271D083F49002C32EE"
-               BuildableName = "MXWebviewDemo.app"
-               BlueprintName = "MXWebviewDemo"
-               ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+               BlueprintIdentifier = "280E159C1F2817F500F7C198"
+               BuildableName = "TestIframe.app"
+               BlueprintName = "TestIframe"
+               ReferencedContainer = "container:TestIframe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,30 +33,30 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28BDD1401D083F4A002C32EE"
-               BuildableName = "MXWebviewDemoTests.xctest"
-               BlueprintName = "MXWebviewDemoTests"
-               ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+               BlueprintIdentifier = "280E15B51F2817F500F7C198"
+               BuildableName = "TestIframeTests.xctest"
+               BlueprintName = "TestIframeTests"
+               ReferencedContainer = "container:TestIframe.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28BDD14B1D083F4A002C32EE"
-               BuildableName = "MXWebviewDemoUITests.xctest"
-               BlueprintName = "MXWebviewDemoUITests"
-               ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+               BlueprintIdentifier = "280E15C01F2817F500F7C198"
+               BuildableName = "TestIframeUITests.xctest"
+               BlueprintName = "TestIframeUITests"
+               ReferencedContainer = "container:TestIframe.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28BDD1271D083F49002C32EE"
-            BuildableName = "MXWebviewDemo.app"
-            BlueprintName = "MXWebviewDemo"
-            ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+            BlueprintIdentifier = "280E159C1F2817F500F7C198"
+            BuildableName = "TestIframe.app"
+            BlueprintName = "TestIframe"
+            ReferencedContainer = "container:TestIframe.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -77,10 +77,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28BDD1271D083F49002C32EE"
-            BuildableName = "MXWebviewDemo.app"
-            BlueprintName = "MXWebviewDemo"
-            ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+            BlueprintIdentifier = "280E159C1F2817F500F7C198"
+            BuildableName = "TestIframe.app"
+            BlueprintName = "TestIframe"
+            ReferencedContainer = "container:TestIframe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -96,10 +96,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28BDD1271D083F49002C32EE"
-            BuildableName = "MXWebviewDemo.app"
-            BlueprintName = "MXWebviewDemo"
-            ReferencedContainer = "container:MXWebviewDemo.xcodeproj">
+            BlueprintIdentifier = "280E159C1F2817F500F7C198"
+            BuildableName = "TestIframe.app"
+            BlueprintName = "TestIframe"
+            ReferencedContainer = "container:TestIframe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

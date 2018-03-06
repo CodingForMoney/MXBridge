@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MXWebviewBridge.h"
-#import "MXCallNativeInvocation.h"
+#import "MXNativeInvocation.h"
 
 
 /**
@@ -66,27 +66,27 @@ return @[@#js_name , NSStringFromSelector(@selector( method ))] ; \
  *  @param dict       一个dictionary，会被转换为json传给JS，响应的调用。
  *  @param invocation <#invocation description#>
  */
-- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)callBackSuccess:(BOOL)success withDictionary:(NSDictionary *)dict toInvocation:(MXNativeInvocation *)invocation;
 
 
-- (void)successCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)successCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXNativeInvocation *)invocation;
 
-- (void)failCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)failCallBackWithDictionary:(NSDictionary *)dict toInvocation:(MXNativeInvocation *)invocation;
 
 // callback 返回一个字符串。
-- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)callBackSuccess:(BOOL)success withString:(NSString *)string toInvocation:(MXNativeInvocation *)invocation;
 
-- (void)successCallBackWithString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)successCallBackWithString:(NSString *)string toInvocation:(MXNativeInvocation *)invocation;
 
-- (void)failCallBackWithString:(NSString *)string toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)failCallBackWithString:(NSString *)string toInvocation:(MXNativeInvocation *)invocation;
 
 // callback 返回一个数组
 
-- (void)callBackSuccess:(BOOL)success withArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)callBackSuccess:(BOOL)success withArray:(NSArray *)array toInvocation:(MXNativeInvocation *)invocation;
 
-- (void)successCallBackWithArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)successCallBackWithArray:(NSArray *)array toInvocation:(MXNativeInvocation *)invocation;
 
-- (void)failCallBackWithArray:(NSArray *)array toInvocation:(MXCallNativeInvocation *)invocation;
+- (void)failCallBackWithArray:(NSArray *)array toInvocation:(MXNativeInvocation *)invocation;
 
 
 

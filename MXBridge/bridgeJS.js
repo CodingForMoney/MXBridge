@@ -6,7 +6,7 @@ if (!window.mxbridge) {
           return  'call' + (__UUID__++) + new Date().valueOf();
     }
     var mxbridge = {
-        version : "0.1.0", // 版本号
+        version : "0.2.0", // 版本号
         isReady : false, // 是否初始化完成.
         //提供一些应用信息. 可自行补充其他信息
         appName : undefined,
@@ -33,7 +33,7 @@ if (!window.mxbridge) {
             if (typeof log == "object") {
                 log = JSON.stringify(log);
             };
-            mxbridge.OCBridgeForJS.loggerWithLevel([log,logLevel]);
+            mxbridge.OCBridgeForJS.loggerWithLevel(log,logLevel);
             console.log(log);
         },
         // 异步调用，JS调用OC ， 参数是JSON对象，没有参数时，传null 或者 undefined .

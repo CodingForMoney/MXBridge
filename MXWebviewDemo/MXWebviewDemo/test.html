@@ -5,12 +5,12 @@
 <title>test</title>
 <script type="text/javascript">
 	function clickSync() {
-		// 同步调用
-		var retString = mxbridge.execSync("test","hello");
-		if (retString.data) {
+        // 同步调用
+        var retString = mxbridge.execSync("test","hello");
+        if (retString.data) {
             mxbridge.log(retString.data);
-			alert(retString.data);
-		}
+            alert(retString.data);
+        }
 	}
 	function clickAysn() {
 		// 异步调用
@@ -18,7 +18,9 @@
         	document.getElementById("showImg").src = "data:image/png;base64," + data ;
         });
 	}
-
+window.hello = function(){
+    console.log("hello" + window.hello);
+}
 </script>
 <style type="text/css">
 .button {

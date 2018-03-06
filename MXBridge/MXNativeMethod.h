@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MXCallNativeInvocation.h"
+#import "MXNativeInvocation.h"
 
 
 /**
@@ -39,7 +39,7 @@
  @param invocation 传递参数
  @param target 目标
  */
-- (id)invokeWithObject:(MXCallNativeInvocation *)invocation onTarget:(id)target;
+- (id)invokeWithObject:(MXNativeInvocation *)invocation onTarget:(id)target;
 
 
 

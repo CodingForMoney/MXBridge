@@ -19,7 +19,7 @@ NSInteger const MXBridge_ReturnCode_ARGUMENTS_ERROR = -5;
 NSInteger const MXBridge_ReturnCode_UNKNOWN_ERROR = -6;
 
 
-NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
+NSString *MXLoggerLevelLabels[] = {@"DEBUG",@"INFO",@"WARN",@"ERROR"};
 
 @implementation MXWebviewContext
 
@@ -43,8 +43,8 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
             _bridgeJS = @"";// 放一个空值，防止崩溃。
         }
         // 默认的日志输出
-        _loggerBlock = ^(NSString *log,NSInteger loggerLevel) {
-            NSLog(@"MXBridgeLog : %@ : %@",MXLoggerLevel[loggerLevel],log);
+        _loggerBlock = ^(NSString *log,MXLoggerLevel loggerLevel) {
+            NSLog(@"MXBridgeLog : %@ : %@",MXLoggerLevelLabels[loggerLevel],log);
         };
         _plugins = [[NSMutableDictionary alloc] init];
     }
@@ -58,46 +58,6 @@ NSString *MXLoggerLevel[] = {@"VERBOSE",@"DEBUG",@"INFO",@"WARN",@"ERROR"};
     }
     return _bridgeJSURL;
 }
-
-- (void)setUp {
-    // 通过方法替换来实现注入，也可以通过其他方式来实现
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Class class = [UIWebView class];
-        // When swizzling a class method, use the following:
-        // Class class = object_getClass((id)self);
-        int methodsCount = 3;
-        SEL originalSelector[methodsCount];
-        SEL swizzledSelector[methodsCount];
-        originalSelector[0] = @selector(setDelegate:);
-        swizzledSelector[0] = @selector(mx_setDelegate:);
-        originalSelector[1] = @selector(initWithFrame:);
-        swizzledSelector[1] = @selector(mx_initWithFrame:);
-        originalSelector[2] = @selector(initWithCoder:);
-        swizzledSelector[2] = @selector(mx_initWithCoder:);
-        
-        for (int i = 0; i < methodsCount; i++) {
-            Method originalMethod = class_getInstanceMethod(class, originalSelector[i]);
-            Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector[i]);
-            
-            BOOL didAddMethod =
-            class_addMethod(class,
-                            originalSelector[i],
-                            method_getImplementation(swizzledMethod),
-                            method_getTypeEncoding(swizzledMethod));
-            
-            if (didAddMethod) {
-                class_replaceMethod(class,
-                                    swizzledSelector[i],
-                                    method_getImplementation(originalMethod),
-                                    method_getTypeEncoding(originalMethod));
-            } else {
-                method_exchangeImplementations(originalMethod, swizzledMethod);
-            }
-        }
-    });
-}
-
 
 - (void)registerPlugin:(Class)plugin name:(NSString *)name {
     if (![plugin isSubclassOfClass:[MXWebviewPlugin class]]) {
