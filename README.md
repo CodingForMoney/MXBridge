@@ -15,7 +15,7 @@ Classes description:
 * `MXWebviewContext` : A context for global setting.
 * `MXWebviewBridge` : The bridge connected Objective-C and JavaScript. UIWebview will hold a `MXWebviewBridge` instance within the lifecycle.
 * `MXWebviewPlugin` : Objective-C plugin which provide functions for JavaScript. A plugin has some functions. `js` will specify the plugin and function to call Native.
-* `MXCallNativeInvocation` : Storing Information for one call from JavaScript to Objective-C.
+* `MXNativeInvocation` : Storing Information for one call from JavaScript to Objective-C.
 * `MXNativeMethod` : Storing Native method info.
 * `MXWebviewPluginConfig` : Store Native plugin info.
 
@@ -25,9 +25,11 @@ Add `MXBridge` to your project by `Cocoapods`:
 
 	pod 'MXBridge'
 	
-To setup `MXBridge` :
+To use `MXBridge`, you can use `MXWebView`. Or you can use `MXWebViewBridgeWrapper`  :
 
-	[[MXWebviewContext shareContext] setUp];
+	_bridge = [MXWebViewBridgeWrapper wrapperWithWebView:webview];
+	_bridge.webviewDelegate = self;
+	
 	
 Create a plugin for JavaScript:
 
