@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MXBridge"
-  s.version      = "0.2"
+  s.version      = "1.0"
   s.summary      = "Bridge betweeen iOS and JavaScript"
   s.homepage     = "https://github.com/CodingForMoney/MXBridge"
   s.license      = { :type => "MIT"}
